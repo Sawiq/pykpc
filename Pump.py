@@ -5,7 +5,7 @@
 # License: GNU GPL
 #
 
-import wx, serial.tools.list_ports, Events, threading
+import wx, serial.tools.list_ports, Events, Threads, Queue
 
 class Pump(wx.EvtHandler):
     PORT_BAUD_RATE = 9600
@@ -20,6 +20,11 @@ class Pump(wx.EvtHandler):
 
         self.isConnected = False
         self.isFlowOn = False
+        
+        self.pumpQueue = Queue.Queue()
+        self.injQueue = Queue.Queue()
+        
+        #~ self.Bind(Events.EVT_SERIALRX
         
         self.ConnectPump(None)
                 
@@ -44,16 +49,60 @@ class Pump(wx.EvtHandler):
     def ConnectPump(self, event):
         self.DisconnectPump()
         if not self.GetAvailableComPorts():
-            wx.PostEvent(self.parent, Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), 0, "Nie podłączono żadnych urządzeń!"))
+            event = Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), 0, "Nie podłączono żadnych urządzeń!")
+            wx.PostEvent(self.parent, event)
             return
+            
         numberOfDevices = len(self.availableComPorts)
-
-
-        wx.PostEvent(self.parent, Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), 2, "Podłączono urządzeń: {}".format(numberOfDevices)))
+        
+        code = 0
+        
+        if numberOfDevices > 0:
+            try:
+                print("[INFO]\tCreating pump thread...")
+                self.pumpThread = Threads.PumpThread(self.availableComPorts[0], self.pumpQueue, self)
+                self.pumpThread.start()
+                self.pumpQueue.put("FLOW?\r")
+            except Exception, ex:
+                print ("[ERROR]\t {}".format(ex.message))
+            else:
+                print("[INFO]\t {}".format("Pump thread created."))
+                code += 1
+                
+        if numberOfDevices > 1:
+            try:
+                print("[INFO]\tCreating injector thread...")
+                self.injThread = Threads.PumpThread(self.availableComPorts[1], self.injQueue, self)
+                self.injThread.start()
+            except Exception, ex:
+                print ("[ERROR]\t {}".format(ex.message))
+            else:
+                print("[INFO]\t {}".format("Injector thread created."))
+                code += 1
+                
+        if code == 0:
+            msg = "Błąd połączenia!"
+        if code == 1:
+            msg = "Podłączono pompę, brak wstrzykiwacza."
+        if code == 2:
+            msg = "Podłączono wstrzykiwacz, brak pompy."
+        if code == 3:
+            msg = "Podłączono pompę i wstrzykiwacz."
+            
+        event = Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), code, msg)
+        wx.PostEvent(self.parent, event)
         
         return
         
     def DisconnectPump(self):
+        if hasattr(self, 'pumpThread'):
+            print("[INFO]\tOdłączam pompę...")
+            self.pumpThread.Stop()
+            print("[INFO]\tPompa odłączona.")
+        if hasattr(self, 'injThread'):
+            print("[INFO]\tOdłączam wstrzykiwacz...")
+            self.injThread.Stop()
+            print("[INFO]\tWstrzykiwacz odłączony.")
         return
     
     def ListenPort (self, serial, kill):

@@ -8,3 +8,12 @@ possibility to get signal from injector with an arduino board.
 * wxPython
 * serial
 
+## Usage
+
+### Menus
+
+#### File Menu
+
+* Connect pump - checks if, the pump (and injector module) is connected and initialises
+connection.
+* Quit
