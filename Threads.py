@@ -48,7 +48,7 @@ class PumpThread(threading.Thread):
                 char = self.serial.read(1)
                 if '\r' in char and len(msg) > 1:
                     char = ''
-                    print('[DATA]\t{}'.format(msg))
+                    #~ print('[DATA]\t{}'.format(msg))
                     event = Events.PumpDataEvent(Events.SERIALRX, wx.ID_ANY, msg)
                     wx.PostEvent(self.parent, event)
                     msg = ''

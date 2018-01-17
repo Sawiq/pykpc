@@ -24,7 +24,7 @@ class Pump(wx.EvtHandler):
         self.pumpQueue = Queue.Queue()
         self.injQueue = Queue.Queue()
         
-        #~ self.Bind(Events.EVT_SERIALRX
+        self.Bind(Events.EVT_SERIALRX, self.ParsePumpResponse)
         
         self.ConnectPump(None)
                 
@@ -62,7 +62,7 @@ class Pump(wx.EvtHandler):
                 print("[INFO]\tCreating pump thread...")
                 self.pumpThread = Threads.PumpThread(self.availableComPorts[0], self.pumpQueue, self)
                 self.pumpThread.start()
-                self.pumpQueue.put("FLOW?\r")
+                self.pumpThread.Write("FLOW?\r")
             except Exception, ex:
                 print ("[ERROR]\t {}".format(ex.message))
             else:
@@ -105,27 +105,13 @@ class Pump(wx.EvtHandler):
             print("[INFO]\tWstrzykiwacz odłączony.")
         return
     
-    def ListenPort (self, serial, kill):
-        while not kill.isSet():
-            msg = ''
-            while serial.inWaiting():
-                char = serial.read(1)
-                if '\r' in char and len(msg) > 1:
-                    char = ''
-                    event = Events.PumpDataEvent(Events.SERIALRX, wx.ID_ANY, msg)
-                    wx.PostEvent(self.parent, event)
-                    msg = ''
-                    break
-                msg += char
-        serial.close()
-        
     def ParsePumpResponse(self, event):
         try:
             pumpResponse = event.data.strip().split(":")
         except Exception, ex:
             print ex.message
             return
-        print('  Komunikat pompy: {}'.format(pumpResponse))
+        print('[DATA]\t{}'.format(pumpResponse))
 
         newEvent = False
         
@@ -146,12 +132,15 @@ class Pump(wx.EvtHandler):
             #~ wx.PostEvent(self.parent, newEvent)
         
     def StartFlow(self, event):
+        if hasattr(self, 'pumpThread'):
+            self.pumpThread.Write("ON\r")
         return
     
     def OnStartFlow(self, event):
         return
     
     def SetFlow(self, flow):
+        
         return
         
             
