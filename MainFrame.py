@@ -296,6 +296,7 @@ class MainFrame(wx.Frame):
         else:
             self.timer.Stop()
             self.startTimerButton.SetLabel("Start")
+            self.statusBar.SetStatusText("Zatrzymano przepływ")
             self.startTimerButton.SetValue(0)
             if self.pump.isFlowOn:
                 self.pump.StartFlow(None)
@@ -305,6 +306,6 @@ class MainFrame(wx.Frame):
     def StartAccusition (self):
         print("[INFO]\tAccusition started.")
         x_dim, y_dim = self.mouse.screen_size()
-        self.mouse.click(60, y_dim - 60, 1)
+        self.mouse.click(70, y_dim - 55, 1)
         pass
         

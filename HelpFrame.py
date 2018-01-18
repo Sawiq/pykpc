@@ -31,4 +31,4 @@ class HelpFrame(wx.Frame):
 
         htmlwin = wx.html.HtmlWindow(self)
         #~ htmlwin.LoadPage("help.html")
-        htmlwin.LoadPage("http://mitr.p.lodz.pl/biomat/rdb/index.php")
+        htmlwin.LoadPage("help.html")
