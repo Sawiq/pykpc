@@ -20,12 +20,15 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx
-from MainFrame import MainFrame
+import wx, wx.lib.wxpTag
 
-if __name__ == "__main__":
-    wx.SetDefaultPyEncoding("utf-8")
-    app = wx.App()
-    frm = MainFrame(None, title="Pompa")
-    frm.Show()
-    app.MainLoop()
+class HelpFrame(wx.Frame):
+    """This window displays manual."""
+    
+    def __init__ (self):
+        """ Function doc """
+        wx.Frame.__init__(self, None, title="Instrukcja obsługi", size=(400, 400))
+
+        htmlwin = wx.html.HtmlWindow(self)
+        #~ htmlwin.LoadPage("help.html")
+        htmlwin.LoadPage("http://mitr.p.lodz.pl/biomat/rdb/index.php")

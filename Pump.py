@@ -4,6 +4,21 @@
 # Email: psawicki@mitr.p.lodz.pl
 # License: GNU GPL
 #
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
 
 import wx, serial.tools.list_ports, Events, Threads, Queue
 
@@ -25,6 +40,7 @@ class Pump(wx.EvtHandler):
         self.injQueue = Queue.Queue()
         
         self.Bind(Events.EVT_SERIALRX, self.ParsePumpResponse)
+        self.Bind(Events.EVT_FLOW_IS_ON, self.OnFlowOn)
         
         self.ConnectPump(None)
                 
@@ -62,11 +78,11 @@ class Pump(wx.EvtHandler):
                 print("[INFO]\tCreating pump thread...")
                 self.pumpThread = Threads.PumpThread(self.availableComPorts[0], self.pumpQueue, self)
                 self.pumpThread.start()
-                self.pumpThread.Write("FLOW?\r")
             except Exception, ex:
                 print ("[ERROR]\t {}".format(ex.message))
             else:
                 print("[INFO]\t {}".format("Pump thread created."))
+                self.pumpThread.Write("FLOW?\r")
                 code += 1
                 
         if numberOfDevices > 1:
@@ -78,7 +94,8 @@ class Pump(wx.EvtHandler):
                 print ("[ERROR]\t {}".format(ex.message))
             else:
                 print("[INFO]\t {}".format("Injector thread created."))
-                code += 1
+                self.injThread.Write("INJ?\r")
+                code += 2
                 
         if code == 0:
             msg = "Błąd połączenia!"
@@ -129,18 +146,37 @@ class Pump(wx.EvtHandler):
         
         if newEvent:
             wx.PostEvent(self, newEvent)
-            #~ wx.PostEvent(self.parent, newEvent)
+            wx.PostEvent(self.parent, newEvent)
         
     def StartFlow(self, event):
         if hasattr(self, 'pumpThread'):
-            self.pumpThread.Write("ON\r")
+            if self.isFlowOn:
+                self.pumpThread.Write("OFF\r")
+            else:
+                self.pumpThread.Write("ON\r")
         return
     
-    def OnStartFlow(self, event):
+    def OnFlowOn(self, event):
+        self.isFlowOn = event.GetData()
         return
     
     def SetFlow(self, flow):
+        try:
+            flowInt = int(flow)
+        except Exception, ex:
+            print("[ERROR]\t{}".format(ex.message))
+            return
         
+        if flowInt > self.MAX_FLOW or flowInt < self.MIN_FLOW:
+            msg = "Dopuszczalny przepływ: {} - {}".format(self.MIN_FLOW, self.MAX_FLOW)
+            event = Events.ErrorMsgEvent(Events.ERROR_MSG, self.parent.GetId(), msg)
+            wx.PostEvent(self.parent, event)
+            return
+
+        if hasattr(self, 'pumpThread'):
+            self.pumpThread.Write("FLOW:{}\r".format(flow))
+        else:
+            print("[ERROR]\tThere is no pump thread started!")
         return
         
             

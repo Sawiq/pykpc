@@ -4,10 +4,25 @@
 # Email: psawicki@mitr.p.lodz.pl
 # License: GNU GPL
 #
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
 
-import wx
-import Pump
-import Events
+import wx, Pump, Events
+from pymouse import PyMouse
+from HelpFrame import HelpFrame
 
 class MainFrame(wx.Frame):
     
@@ -21,10 +36,13 @@ class MainFrame(wx.Frame):
         self.portItems = []
         self.pump = Pump.Pump(self)
         
+        self.mouse = PyMouse()
+
         self.MakeStatusBar()
         self.MakeMenuBar()
         self.MakeMainPanel()
         self.MakeToolBar()
+        self.MakeTimer()
         self.MakeBindings()
 
         #~ self.OnRefreshPortMenu(None)
@@ -54,6 +72,7 @@ class MainFrame(wx.Frame):
         self.helpMenu = wx.Menu()
         
         self.aboutItem = self.helpMenu.Append(wx.ID_ABOUT)
+        self.helpItem = self.helpMenu.Append(wx.ID_ANY, "&Instrukcja obsługi")
         
         self.menuBar.Append(self.fileMenu, "&Plik")
         #~ self.menuBar.Append(self.portMenu, "&Port")
@@ -63,6 +82,7 @@ class MainFrame(wx.Frame):
         #~ self.Bind(wx.EVT_MENU, self.OnRefreshPortMenu, self.refreshPortItem)
         self.Bind(wx.EVT_MENU, self.OnExit, self.exitItem)
         self.Bind(wx.EVT_MENU, self.OnAbout, self.aboutItem)
+        self.Bind(wx.EVT_MENU, self.OnHelp, self.helpItem)
         
         self.SetMenuBar(self.menuBar)
     
@@ -76,6 +96,7 @@ class MainFrame(wx.Frame):
         self.timerControlsGroup = wx.StaticBox(self.mainPanel, label='Odliczanie')
         self.timerTextCtrl = wx.TextCtrl(self.mainPanel, wx.ID_ANY, '0');
         self.startTimerButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, '&Start')
+        self.startTimerButton.Enable(False)
         
         self.accusitionAutoStartCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Rozpocznij pomiar po &zakończeniu odliczania.')
         self.flowAutoStopCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Rozpocznij &odliczanie po nastrzyku.')
@@ -118,14 +139,23 @@ class MainFrame(wx.Frame):
     def MakeToolBar(self):
         return
         
+    def MakeTimer(self):
+        self.timer = wx.Timer(self)
+        self.Bind(wx.EVT_TIMER, self.OnTimerTick, self.timer)
+        self.timeToStopFlow = 0
+        
     def MakeBindings(self):
         self.Bind(wx.EVT_TOGGLEBUTTON, self.pump.StartFlow, self.startFlowButton)
         self.Bind(wx.EVT_BUTTON, self.OnSetFlowButton, self.setFlowButton)
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnSetFlowButton, self.flowTextCtrl)
+        self.Bind(wx.EVT_TOGGLEBUTTON, self.OnStartTimerButton, self.startTimerButton)
+        self.Bind(wx.EVT_TEXT_ENTER, self.OnTimerTextCtrlKeyEnter, self.timerTextCtrl)
         
         self.Bind(Events.EVT_PUMP_CONNECTED, self.OnPumpConnected)
         self.Bind(Events.EVT_FLOW_IS_ON, self.OnFlowOn)
         self.Bind(Events.EVT_FLOW_INFO, self.OnSetFlow)
         self.Bind(Events.EVT_INJ_INFO, self.OnInject)
+        self.Bind(Events.EVT_ERROR_MSG, self.OnErrorMsg)
     
     def OnAbout (self, event):
         wx.MessageBox(
@@ -133,6 +163,11 @@ class MainFrame(wx.Frame):
         "O programie",
         wx.OK|wx.ICON_INFORMATION
         )
+    
+    def OnHelp (self, event):
+        """ Shows Help window. """
+        self.helpPage = HelpFrame()
+        self.helpPage.Show()
         
     #~ def OnRefreshPortMenu(self, event):
         #~ for item in self.portMenu.GetMenuItems():
@@ -158,28 +193,53 @@ class MainFrame(wx.Frame):
         self.Close(True)
         
     def OnFlowOn(self, event):
-        if event.data:
+        if event.GetData():
             self.statusBar.SetStatusText("Przepływ włączony")
             self.startFlowButton.SetLabel("Wyłącz przepływ")
+            self.startTimerButton.Enable(True)
+            self.startFlowButton.SetValue(1)
+            self.statusBar.SetStatusText("ON", self.PUMP_STATUS_BAR)
         else:
             self.statusBar.SetStatusText("Przepływ wyłączony")
             self.startFlowButton.SetLabel("Włącz przepływ")
+            self.startTimerButton.Enable(False)
+            self.startFlowButton.SetValue(0)
+            self.statusBar.SetStatusText("OFF", self.PUMP_STATUS_BAR)
+            
              
     def OnSetFlowButton (self, event):
         self.pump.SetFlow(self.flowTextCtrl.GetValue())
         
     def OnSetFlow (self, event):
         if event.data:
-            self.flowTextCtrl.SetText(event.data)
             self.statusBar.SetStatusText("Przepływ: {}".format(event.data))
         return
+        
+        try:
+            flowInt = int(event.data)
+        except Exception, ex:
+            print("ERROR\t {}".format(ex.message))
+        else:
+            self.flowTextCtrl.SetLabel(event.data)
+            
+    
+    def OnErrorMsg (self,event):
+        if event.GetData():
+            self.statusBar.SetStatusText(event.GetData())
     
     def OnInject (self, event):
         self.statusBar.SetStatusText(event.data, self.INJ_STATUS_BAR)
+        
         if event.data == 'I':
+            print("[INFO]\tSample injected.")
+            
             if self.flowAutoStopCheckBox.GetValue():
-                self.statusBar.SetStatusText("Odliczanie...")
+                self.startTimerButton.SetValue(1)
+                self.OnStartTimerButton(None)
+        
         if event.data == 'L':
+            print("[INFO]\tLoading sample.")
+            
             if self.flowAutoStartCheckBox.GetValue():
                 self.pump.StartFlow(None)
                 self.startFlowButton.SetValue(True)
@@ -193,9 +253,58 @@ class MainFrame(wx.Frame):
             self.mainPanel.Enable(False)
             return
             
-        if event.status > 1:
+        if event.status == 3:
             self.flowAutoStartCheckBox.Enable(True)
             self.flowAutoStopCheckBox.Enable(True)
         else:
             self.flowAutoStartCheckBox.Enable(False)
             self.flowAutoStopCheckBox.Enable(False)
+            
+    def OnTimerTextCtrlKeyEnter (self, event):
+        event = wx.MouseEvent(wx.EVT_LEFT_DOWN.typeId, self.startTimerButton.GetId())
+        wx.PostEvent(self, event)
+            
+    def OnStartTimerButton(self, event):
+        if not self.startTimerButton.GetValue():
+            self.timer.Stop()
+            self.statusBar.SetStatusText("Zatrzymano odliczanie")
+            self.startTimerButton.SetLabel("Start")
+
+        else:
+            try:
+                self.timeToStopFlow = int(self.timerTextCtrl.GetValue())
+            except Exception, ex:
+                print("[ERROR]\t{}".format(ex.message))
+                self.startTimerButton.SetValue(0)
+                return
+                
+            if self.timeToStopFlow == 0:
+                self.startTimerButton.SetValue(0)
+                return
+            
+            self.startTimerButton.SetLabel("Stop")    
+            self.statusBar.SetStatusText("Zatrzymanie przepływu za {} s".format(self.timeToStopFlow))
+            self.timer.Start(1000)
+        
+    def OnTimerTick (self, event):
+        """ Function doc """
+        self.timeToStopFlow -= 1
+        
+        if self.timeToStopFlow > 0:
+            self.statusBar.SetStatusText("Zatrzymanie przepływu za {} s".format(self.timeToStopFlow))
+        
+        else:
+            self.timer.Stop()
+            self.startTimerButton.SetLabel("Start")
+            self.startTimerButton.SetValue(0)
+            if self.pump.isFlowOn:
+                self.pump.StartFlow(None)
+            if self.accusitionAutoStartCheckBox.GetValue():
+                self.StartAccusition()
+                
+    def StartAccusition (self):
+        print("[INFO]\tAccusition started.")
+        x_dim, y_dim = self.mouse.screen_size()
+        self.mouse.click(60, y_dim - 60, 1)
+        pass
+        

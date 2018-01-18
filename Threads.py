@@ -4,6 +4,21 @@
 # Email: psawicki@mitr.p.lodz.pl
 # License: GNU GPL
 #
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
 
 import wx, threading, serial, Events, Queue
 
@@ -29,7 +44,7 @@ class PumpThread(threading.Thread):
             self.serial.open()
         except Exception, ex:
             print ("[ERROR]\tUnable to open port {}".format(self.port))
-            print ("[ERROR]\t{}\n\n{}".format(ex.message, ex.traceback))
+            print ("[ERROR]\t{}".format(ex.message))
             self.stopRequest.set()
         else:
             print ("[INFO]\tListening port {}".format(self.port))
@@ -43,6 +58,9 @@ class PumpThread(threading.Thread):
                     self.serial.write(command)
                 except Queue.Empty:
                     continue
+            if not self.serial.is_open:
+                print("[ERROR]\tPort {} is not open!".format(self.port))
+
 
             while self.serial.inWaiting():
                 char = self.serial.read(1)
@@ -66,10 +84,7 @@ class PumpThread(threading.Thread):
 
     def Write (self, msg):
         """ Function doc """
-        if self.serial.is_open:
-            self.queue.put(msg)
-        else:
-            print("[ERROR]\tPort {} is not open!".format(self.port))
+        self.queue.put(msg)
         
     def Stop(self):
         if self.isAlive():

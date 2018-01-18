@@ -4,6 +4,21 @@
 # Email: psawicki@mitr.p.lodz.pl
 # License: GNU GPL
 #
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation; either version 2 of the License, or
+#  (at your option) any later version.
+#  
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#  
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+#  MA 02110-1301, USA.
+#  
 
 import wx
 
@@ -86,6 +101,26 @@ class InjInfoEvent(wx.PyCommandEvent):
 
     def GetData(self):
         return self.data
+
+ERROR_MSG = wx.NewEventType()
+EVT_ERROR_MSG = wx.PyEventBinder(ERROR_MSG, 2)
+
+class ErrorMsgEvent(wx.PyCommandEvent):
+    eventType = ERROR_MSG
+
+    def __init__(self, eventType, windowID, data, *args, **kargs):
+        wx.PyCommandEvent.__init__(self, self.eventType, windowID)
+        self.eventType = eventType
+        self.data = data
+
+    def Clone(self):
+        self.__class__(self.GetId(), self.data)
+        
+    def GetId(self):
+        return self.windowID
+
+    def GetData(self):
+        return "Błąd: {}".format(self.data)
 
 """
 Jeżeli status:
