@@ -27,7 +27,7 @@ class HelpFrame(wx.Frame):
     
     def __init__ (self):
         """ Function doc """
-        wx.Frame.__init__(self, None, title="Instrukcja obsługi", size=(400, 400))
+        wx.Frame.__init__(self, None, title="Instrukcja obsługi", size=(500, 400))
 
         htmlwin = wx.html.HtmlWindow(self)
         #~ htmlwin.LoadPage("help.html")

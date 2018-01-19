@@ -98,7 +98,9 @@ class MainFrame(wx.Frame):
         self.startTimerButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, '&Start')
         self.startTimerButton.Enable(False)
         
-        self.accusitionAutoStartCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Rozpocznij pomiar po &zakończeniu odliczania.')
+        self.accusitionManualStartCheckBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, 'Ręczny start pomiaru.')
+        self.accusitionAutoStartCheckBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, 'Rozpocznij pomiar po &zakończeniu odliczania.')
+        self.accusitionAutoStartAfterInjRadioBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, 'Rozpocznij pomiar po &nastrzyku.')
         self.flowAutoStopCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Rozpocznij &odliczanie po nastrzyku.')
         self.flowAutoStartCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Uruchom &przepływ podczas napełniania pętli.')
         self.startFlowButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, '&Włącz przepływ')
@@ -125,7 +127,9 @@ class MainFrame(wx.Frame):
 
         self.mainPanelSizer = wx.BoxSizer(wx.VERTICAL)
         self.mainPanelSizer.Add(self.controlsSizer, 0, wx.ALL|wx.EXPAND, self.SIZER_PADDING)      
+        self.mainPanelSizer.Add(self.accusitionManualStartCheckBox, 0, wx.ALL, self.SIZER_PADDING)      
         self.mainPanelSizer.Add(self.accusitionAutoStartCheckBox, 0, wx.ALL, self.SIZER_PADDING)      
+        self.mainPanelSizer.Add(self.accusitionAutoStartAfterInjRadioBox, 0, wx.ALL, self.SIZER_PADDING)      
         self.mainPanelSizer.Add(self.flowAutoStopCheckBox, 0, wx.ALL, self.SIZER_PADDING)      
         self.mainPanelSizer.Add(self.flowAutoStartCheckBox, 0, wx.ALL, self.SIZER_PADDING)      
         self.mainPanelSizer.Add(self.startFlowButton, 0, wx.ALL|wx.EXPAND, self.SIZER_PADDING)      
@@ -233,6 +237,9 @@ class MainFrame(wx.Frame):
         if event.data == 'I':
             print("[INFO]\tSample injected.")
             
+            if self.accusitionAutoStartAfterInjRadioBox.GetValue():
+                self.StartAccusition()
+            
             if self.flowAutoStopCheckBox.GetValue():
                 self.startTimerButton.SetValue(1)
                 self.OnStartTimerButton(None)
@@ -257,6 +264,7 @@ class MainFrame(wx.Frame):
             self.flowAutoStartCheckBox.Enable(True)
             self.flowAutoStopCheckBox.Enable(True)
         else:
+            self.accusitionAutoStartAfterInjRadioBox.Enable(False)
             self.flowAutoStartCheckBox.Enable(False)
             self.flowAutoStopCheckBox.Enable(False)
             
