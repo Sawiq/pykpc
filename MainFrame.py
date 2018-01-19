@@ -170,7 +170,7 @@ class MainFrame(wx.Frame):
     
     def OnHelp (self, event):
         """ Shows Help window. """
-        self.helpPage = HelpFrame()
+        self.helpPage = HelpFrame(self)
         self.helpPage.Show()
         
     #~ def OnRefreshPortMenu(self, event):

@@ -1,8 +1,15 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <style type="text/css">
+        <style>
+        p {
+            text-align: justify;
+        }
         
+        h1 {
+            color: white;
+            background-color: #2196F3;
+        }
         </style>
     </head>
     <body>
@@ -20,14 +27,92 @@
         <p>
             Program zak&#322;ada, &#380;e pompa jest pod&#322;&#261;czona do pierwszego aktywnego portu
             szeregowego (port fizyczny), natomiast p&#322;ytka arduino do kolejnego 
-            (port z konwertera USB <=> UART).
+            (port z konwertera USB do UART).
         </p>
         <h2>
             Pasek Menu
         </h2>
-        <h3>
-            Menu <i>Plik</i>
-        </h3>
         
+            <h3>
+                Menu <i>Plik</i>
+            </h3>
+                <p>
+                    <b>Po&#322;&#261;cz si&#281; z pomp&#261;</b> Sprawdza, czy pompa (i ewentualnie modu&#322; wstrzykiwacza) jest pod&#322;&#261;czona
+                    i nawi&#261;zuje po&#322;&#261;czenie.
+                </p>
+                <p>
+                    <b>Quit</b> Ko&#324;czy po&#322;&#261;czenia (je&#347;li by&#322;y otwarte) i zamyka program.
+                </p>
+            <h3>
+                Menu <Li>Pomoc</Li>
+            </h3>
+                <p>
+                    <b>About</b> Wy&#347;wietla podstawowe informacje o programie.
+                </p>
+                <p>
+                    <b>Instrukcja obs&#322;ugi</b> Wy&#347;wietla ten dokument.
+                </p>
+        
+            <h3>
+                G&#322;&#243;wne okno programu
+            </h3>
+            <h4>
+            Przep&#322;yw
+            </h4>
+                <p>
+                    Pole tekstowe pozwala poda&#263; &#380;&#261;dany przep&#322;yw w &mu;L/min. W tech chwili
+                    limity przep&#322;ywu s&#261; zakodowane na sta&#322;e od minimalnej warto&#347;ci 100 &mu;L/min do 5000 &mu;L/min.
+                    Po klikni&#281;ciu przycisku <i>Ustaw</i> do pompy wysy&#322;ane jest odpowiednia komenda.
+                    Przep&#322;yw mo&#380;na zmieni&#263; w dowolnym momencie.
+                </p>
+            <h4>Odliczanie</h4>
+                <p>
+                    Pole tekstowe pozwala poda&#263; czas w sekundach do automatycznego zatrzymania przep&#322;ywu.
+                    Klikni&#281;cie w przycisk rozpoczyna odliczanie. Ponowne klikni&#281;cie pozwala zatrzyma&#263;
+                    licznik, bez wp&#322;ywu na przep&#322;yw.
+                </p>
+                
+            <h4>Grupa opcji</h4>
+                <p>
+                    <b>R&#281;czny start pomiaru.</b> Zar&#243;wno po nastrzyku jak i po zako&#324;czeniu odliczania nie
+                    zostanie automatycznie rozpocz&#281;ty pomiar.
+                </p>
+                <p>
+                    <b>Rozpocznij pomiar po zako&#324;czeniu odliczania.</b> Gdy odliczanie dobiegnie ko&#324;ca,
+                    program zasymuluje klikni&#281;cie myszki, co powinno rozpocz&#261;&#263; pomiar. Okno programu PicoScope
+                    powinno by&#263; znaksymalizowane, tak by przycisk uruchamiaj&#261;cy pomiar znajdowa&#322; si&#281;
+                    oko&#322;o 70 pikseli od lewej i 55 pikseli od dolnej kraw&#281;dzi ekranu.
+                </p>
+                <p>
+                    <b>Rozpocznij pomiar po nastrzyku.</b> Jak wy&#380;ej, ale symulacja klikni&#281;cia nast&#261;pi w chwili
+                    nastrzyku. Wymaga modu&#322;u Arduino.
+                </p>
+                <p>
+                    Z powy&#380;szych opcji mo&#380;na wybra&#263; tylko jedn&#261;.
+                </p>
+                <p>
+                    <b>Rozpocznij odliczanie po nastrzyku.</b> W chwili nastrzyku rozpocznie si&#281; odliczanie, po
+                    zako&#324;czeniu kt&#243;rego zostanie zatrzymany prze&#322;yw. Wymaga modu&#322;u Arduino.
+                </p>
+                <p>
+                    <b>Uruchom przep&#322;yw podczas nape&#322;niania p&#281;tli.</b> W&#322;&#261;czy przep&#322;yw po ustawieniu wstrzykiwacza
+                    w pozycji <i>Load</i>. Wymaga modu&#322;u Arduino.
+                </p>
+            <h4>
+                Przycisk W&#322;&#261;cz/Wy&#322;&#261;cz przep&#322;yw
+            </h4>
+                <p>
+                    Klikni&#281;cie tego przycisku pozwala r&#281;cznie w&#322;&#261;czy&#263; i wy&#322;&#261;czy&#263; przep&#322;yw.
+                </p>
+        <h3>
+            Pasek statusu
+        </h3>
+            <p>
+                Pasek statusu jest podzielony na trzy cz&#281;&#347;ci. Cz&#281;&#347;&#263; pierwsza wy&#347;wietla og&#243;lne komunikaty,
+                informuj&#261;ce o wykonanych czynno&#347;ciach. Cz&#281;&#347;&#263; druga wy&#347;wietla informacje o po&#322;o&#380;eniu wstrzykiwacza: 
+                <b>I</b>, je&#380;eli wstrzykiwacz jest w pozycji <i>Inject</i> oraz <b>L</b>, je&#380;eli jest w pozycji <i>Load</i>.
+                Trzecia cz&#281;&#347;&#263; wy&#347;wietla informacje o przep&#322;ywie: <b>ON</b>, je&#380;eli przep&#322;yw jest w&#322;&#261;czony,
+                oraz <b>OFF</b> je&#380;eli przep&#322;yw jest wy&#322;&#261;czony.
+            </p>
     </body>
 </html>

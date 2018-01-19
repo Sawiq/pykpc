@@ -3,7 +3,7 @@
 This simple program controlls Knaurer Azura Pumps over serial port. There is an additional
 possibility to get signal from injector with an arduino board.
 
-Main goal for this project was to have a possibility to conduct experiments in a custom-made
+Main goal for this project was to have a possibility to conduct experiments on a custom-made
 equipment.
 
 For now program is not internationalised and written in polish, howewer, I will

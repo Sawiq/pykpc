@@ -25,9 +25,9 @@ import wx, wx.lib.wxpTag
 class HelpFrame(wx.Frame):
     """This window displays manual."""
     
-    def __init__ (self):
+    def __init__ (self, parent):
         """ Function doc """
-        wx.Frame.__init__(self, None, title="Instrukcja obsługi", size=(500, 400))
+        wx.Frame.__init__(self, parent, title="Instrukcja obsługi", size=(500, 400))
 
         htmlwin = wx.html.HtmlWindow(self)
         #~ htmlwin.LoadPage("help.html")
