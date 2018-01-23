@@ -20,12 +20,15 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx
+import wx, gettext, sys
 from MainFrame import MainFrame
 
 if __name__ == "__main__":
     wx.SetDefaultPyEncoding("utf-8")
+    #~ sys.setdefaultencoding('utf8')
+    gettext.install('pykpc', './locale', unicode=True)
+    
     app = wx.App()
-    frm = MainFrame(None, title="Pompa")
+    frm = MainFrame(None, title=_(u"Pump"))
     frm.Show()
     app.MainLoop()

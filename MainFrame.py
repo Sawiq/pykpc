@@ -20,9 +20,11 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx, Pump, Events
+import wx, Pump, Events, gettext
 from pymouse import PyMouse
 from HelpFrame import HelpFrame
+
+gettext.install('pykpc', './locale', unicode=True)
 
 class MainFrame(wx.Frame):
     
@@ -53,8 +55,8 @@ class MainFrame(wx.Frame):
         self.statusBar = self.CreateStatusBar(3)
         self.statusBar.SetStatusWidths([-6, -1, -1])
         self.SetStatusBar(self.statusBar)
-        self.statusBar.SetStatusText("Wykrywanie pompy...")
-        self.statusBar.SetStatusText("P", self.PUMP_STATUS_BAR)
+        self.statusBar.SetStatusText(_(u"Detecting pump..."))
+        self.statusBar.SetStatusText(u"P", self.PUMP_STATUS_BAR)
         
         return
 
@@ -62,7 +64,7 @@ class MainFrame(wx.Frame):
         self.menuBar = wx.MenuBar()
         
         self.fileMenu = wx.Menu()
-        self.connectPumpItem = self.fileMenu.Append(wx.ID_ANY, "&Połącz się z pompą\tCtrl+P")
+        self.connectPumpItem = self.fileMenu.Append(wx.ID_ANY, _(u"&Connect with the pump\tCtrl+P"))
         #~ self.refreshPortItem = self.fileMenu.Append(wx.ID_ANY, "&Odśwież porty\tCtrl+R").Enable(False)
         self.fileMenu.AppendSeparator()
         self.exitItem = self.fileMenu.Append(wx.ID_EXIT)
@@ -72,11 +74,11 @@ class MainFrame(wx.Frame):
         self.helpMenu = wx.Menu()
         
         self.aboutItem = self.helpMenu.Append(wx.ID_ABOUT)
-        self.helpItem = self.helpMenu.Append(wx.ID_ANY, "&Instrukcja obsługi")
+        self.helpItem = self.helpMenu.Append(wx.ID_ANY, _(u"&User manual"))
         
-        self.menuBar.Append(self.fileMenu, "&Plik")
+        self.menuBar.Append(self.fileMenu, _(u"&File"))
         #~ self.menuBar.Append(self.portMenu, "&Port")
-        self.menuBar.Append(self.helpMenu, "P&omoc")
+        self.menuBar.Append(self.helpMenu, _(u"&Help"))
         
         self.Bind(wx.EVT_MENU, self.pump.ConnectPump, self.connectPumpItem)
         #~ self.Bind(wx.EVT_MENU, self.OnRefreshPortMenu, self.refreshPortItem)
@@ -89,29 +91,29 @@ class MainFrame(wx.Frame):
     def MakeMainPanel(self):
         self.mainPanel = wx.Panel(self)
         
-        self.flowControlsGroup = wx.StaticBox(self.mainPanel, label='Przepływ')
+        self.flowControlsGroup = wx.StaticBox(self.mainPanel, label=_(u'Flow'))
         self.flowTextCtrl = wx.TextCtrl(self.mainPanel, wx.ID_ANY, '0')
-        self.setFlowButton = wx.Button(self.mainPanel, wx.ID_ANY, '&Ustaw')
+        self.setFlowButton = wx.Button(self.mainPanel, wx.ID_ANY, _(u'&Set'))
         
-        self.timerControlsGroup = wx.StaticBox(self.mainPanel, label='Odliczanie')
+        self.timerControlsGroup = wx.StaticBox(self.mainPanel, label=_(u'Timer'))
         self.timerTextCtrl = wx.TextCtrl(self.mainPanel, wx.ID_ANY, '0');
-        self.startTimerButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, '&Start')
+        self.startTimerButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, u'&Start')
         self.startTimerButton.Enable(False)
         
-        self.accusitionManualStartCheckBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, 'Ręczny start pomiaru.')
-        self.accusitionAutoStartCheckBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, 'Rozpocznij pomiar po &zakończeniu odliczania.')
-        self.accusitionAutoStartAfterInjRadioBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, 'Rozpocznij pomiar po &nastrzyku.')
-        self.flowAutoStopCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Rozpocznij &odliczanie po nastrzyku.')
-        self.flowAutoStartCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, 'Uruchom &przepływ podczas napełniania pętli.')
-        self.startFlowButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, '&Włącz przepływ')
+        self.accusitionManualStartCheckBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, _(u'&Manual measurement.'))
+        self.accusitionAutoStartCheckBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, _(u'Start accusition when &counting down ends.'))
+        self.accusitionAutoStartAfterInjRadioBox = wx.RadioButton(self.mainPanel, wx.ID_ANY, _(u'Start accusition after sample &injection'))
+        self.flowAutoStopCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, _(u'Start c&ounting down after sample injection'))
+        self.flowAutoStartCheckBox = wx.CheckBox(self.mainPanel, wx.ID_ANY, _(u'Start &flow during sample load.'))
+        self.startFlowButton = wx.ToggleButton(self.mainPanel, wx.ID_ANY, _(u'&Turn flow ON'))
         
         self.flowInputSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.flowInputSizer.Add(self.flowTextCtrl, 0, wx.ALL|wx.EXPAND)
-        self.flowInputSizer.Add(wx.StaticText(self.mainPanel, wx.ID_ANY, "µL/min"), 0, wx.LEFT, self.SIZER_PADDING)
+        self.flowInputSizer.Add(wx.StaticText(self.mainPanel, wx.ID_ANY, u"µL/min"), 0, wx.LEFT, self.SIZER_PADDING)
         
         self.timerInputSizer = wx.BoxSizer(wx.HORIZONTAL)
         self.timerInputSizer.Add(self.timerTextCtrl, 0, wx.ALL|wx.EXPAND)
-        self.timerInputSizer.Add(wx.StaticText(self.mainPanel, wx.ID_ANY, "s"), 0, wx.LEFT, self.SIZER_PADDING)
+        self.timerInputSizer.Add(wx.StaticText(self.mainPanel, wx.ID_ANY, u"s"), 0, wx.LEFT, self.SIZER_PADDING)
         
         self.flowControlsSizer = wx.StaticBoxSizer(self.flowControlsGroup, wx.VERTICAL)
         self.flowControlsSizer.Add(self.flowInputSizer, 0, wx.ALL|wx.EXPAND, self.SIZER_PADDING)
@@ -163,8 +165,10 @@ class MainFrame(wx.Frame):
     
     def OnAbout (self, event):
         wx.MessageBox(
-        "Program sterujący pompą Knauer Azura P2.1S za pomocą portu szeregowego.\n\nAutor: Sawik\npsawicki@mitr.p.lodz.pl",
-        "O programie",
+        _(u"Program for controlling Knauer Azura P2.1S pump over serial port.\n\nAuthor: Sawik\npsawicki@mitr.p.lodz.pl"),
+        _(u"About"),
+        #~ "Program sterujący pompą Knauer Azura P2.1S za pomocą portu szeregowego.\n\nAutor: Sawik\npsawicki@mitr.p.lodz.pl",
+        #~ "O programie",
         wx.OK|wx.ICON_INFORMATION
         )
     
@@ -198,17 +202,17 @@ class MainFrame(wx.Frame):
         
     def OnFlowOn(self, event):
         if event.GetData():
-            self.statusBar.SetStatusText("Przepływ włączony")
-            self.startFlowButton.SetLabel("Wyłącz przepływ")
+            self.statusBar.SetStatusText(_(u"Flow is turned ON"))
+            self.startFlowButton.SetLabel(_(u"Turn flow OFF"))
             self.startTimerButton.Enable(True)
             self.startFlowButton.SetValue(1)
-            self.statusBar.SetStatusText("ON", self.PUMP_STATUS_BAR)
+            self.statusBar.SetStatusText(u"ON", self.PUMP_STATUS_BAR)
         else:
-            self.statusBar.SetStatusText("Przepływ wyłączony")
-            self.startFlowButton.SetLabel("Włącz przepływ")
+            self.statusBar.SetStatusText(_(u"Flow is turned OFF"))
+            self.startFlowButton.SetLabel(_(u"Turn flow ON"))
             self.startTimerButton.Enable(False)
             self.startFlowButton.SetValue(0)
-            self.statusBar.SetStatusText("OFF", self.PUMP_STATUS_BAR)
+            self.statusBar.SetStatusText(u"OFF", self.PUMP_STATUS_BAR)
             
              
     def OnSetFlowButton (self, event):
@@ -216,13 +220,13 @@ class MainFrame(wx.Frame):
         
     def OnSetFlow (self, event):
         if event.data:
-            self.statusBar.SetStatusText("Przepływ: {}".format(event.data))
+            self.statusBar.SetStatusText(_(u"Flow: {}").format(event.data))
         return
         
         try:
             flowInt = int(event.data)
         except Exception, ex:
-            print("ERROR\t {}".format(ex.message))
+            print(u"ERROR\t {}".format(ex.message))
         else:
             self.flowTextCtrl.SetLabel(event.data)
             
@@ -235,7 +239,7 @@ class MainFrame(wx.Frame):
         self.statusBar.SetStatusText(event.data, self.INJ_STATUS_BAR)
         
         if event.data == 'I':
-            print("[INFO]\tSample injected.")
+            print(u"[INFO]\tSample injected.")
             
             if self.accusitionAutoStartAfterInjRadioBox.GetValue():
                 self.StartAccusition()
@@ -245,7 +249,7 @@ class MainFrame(wx.Frame):
                 self.OnStartTimerButton(None)
         
         if event.data == 'L':
-            print("[INFO]\tLoading sample.")
+            print(u"[INFO]\tLoading sample.")
             
             if self.flowAutoStartCheckBox.GetValue():
                 self.pump.StartFlow(None)
@@ -275,8 +279,8 @@ class MainFrame(wx.Frame):
     def OnStartTimerButton(self, event):
         if not self.startTimerButton.GetValue():
             self.timer.Stop()
-            self.statusBar.SetStatusText("Zatrzymano odliczanie")
-            self.startTimerButton.SetLabel("Start")
+            self.statusBar.SetStatusText(_(u"Counting down aborted."))
+            self.startTimerButton.SetLabel(_(u"Start"))
 
         else:
             try:
@@ -290,8 +294,8 @@ class MainFrame(wx.Frame):
                 self.startTimerButton.SetValue(0)
                 return
             
-            self.startTimerButton.SetLabel("Stop")    
-            self.statusBar.SetStatusText("Zatrzymanie przepływu za {} s".format(self.timeToStopFlow))
+            self.startTimerButton.SetLabel(_(u"Stop"))
+            self.statusBar.SetStatusText(_(u"Flow will stop in {} s").format(self.timeToStopFlow))
             self.timer.Start(1000)
         
     def OnTimerTick (self, event):
@@ -299,12 +303,12 @@ class MainFrame(wx.Frame):
         self.timeToStopFlow -= 1
         
         if self.timeToStopFlow > 0:
-            self.statusBar.SetStatusText("Zatrzymanie przepływu za {} s".format(self.timeToStopFlow))
+            self.statusBar.SetStatusText(_(u"Flow will stop in {} s").format(self.timeToStopFlow))
         
         else:
             self.timer.Stop()
-            self.startTimerButton.SetLabel("Start")
-            self.statusBar.SetStatusText("Zatrzymano przepływ")
+            self.startTimerButton.SetLabel(_(u"Start"))
+            self.statusBar.SetStatusText(_(u"Flow is stopped."))
             self.startTimerButton.SetValue(0)
             if self.pump.isFlowOn:
                 self.pump.StartFlow(None)
@@ -312,7 +316,7 @@ class MainFrame(wx.Frame):
                 self.StartAccusition()
                 
     def StartAccusition (self):
-        print("[INFO]\tAccusition started.")
+        print(u"[INFO]\tAccusition started.")
         x_dim, y_dim = self.mouse.screen_size()
         self.mouse.click(70, y_dim - 55, 1)
         pass

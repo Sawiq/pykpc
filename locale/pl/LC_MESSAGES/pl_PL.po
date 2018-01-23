@@ -1,0 +1,155 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-01-23 22:32+0100\n"
+"PO-Revision-Date: 2018-01-23 22:40+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Language: pl_PL\n"
+
+#: HelpFrame.py:32
+msgid "User manual"
+msgstr "Podręcznik użytkownika"
+
+#: MainFrame.py:58
+msgid "Detecting pump..."
+msgstr "Wykrywanie pompy..."
+
+#: MainFrame.py:67
+msgid "&Connect with the pump\tCtrl+P"
+msgstr "&Połącz z pompą\tCtrl+P"
+
+#: MainFrame.py:77
+msgid "&User manual"
+msgstr "P&odręcznik użytkownika"
+
+#: MainFrame.py:79
+msgid "&File"
+msgstr "&Plik"
+
+#: MainFrame.py:81
+msgid "&Help"
+msgstr "&Pomoc"
+
+#: MainFrame.py:94
+msgid "Flow"
+msgstr "Przepływ"
+
+#: MainFrame.py:96
+msgid "&Set"
+msgstr "&Ustaw"
+
+#: MainFrame.py:98
+msgid "Timer"
+msgstr "Odliczanie"
+
+#: MainFrame.py:103
+msgid "&Manual measurement."
+msgstr "Pomiar &ręczny"
+
+#: MainFrame.py:104
+msgid "Start accusition when &counting down ends."
+msgstr "Rozpocznij pomiar po zakończeniu &odliczania"
+
+#: MainFrame.py:105
+msgid "Start accusition after sample &injection"
+msgstr "Rozpocznij pomiar po nastrzyku"
+
+#: MainFrame.py:106
+msgid "Start c&ounting down after sample injection"
+msgstr "Rozpocznij &odliczanie po nastrzyku"
+
+#: MainFrame.py:107
+msgid "Start &flow during sample load."
+msgstr "Włącz &przepływ podczas wprowadzania próbki"
+
+#: MainFrame.py:108
+msgid "&Turn flow ON"
+msgstr "&Włącz przepływ"
+
+#: MainFrame.py:168
+msgid ""
+"Program for controlling Knauer Azura P2.1S pump over serial port.\n"
+"\n"
+"Author: Sawik\n"
+"psawicki@mitr.p.lodz.pl"
+msgstr ""
+"Program sterujący pompą Knauer Azura P2.1S za pomocą portu szeregowego.\n"
+"\n"
+"Autor: Sawik\n"
+"\n"
+"psawicki@mitr.p.lodz.pl"
+
+#: MainFrame.py:169
+msgid "About"
+msgstr "O programie"
+
+#: MainFrame.py:205
+msgid "Flow is turned ON"
+msgstr "Przepływ włączony"
+
+#: MainFrame.py:206
+msgid "Turn flow OFF"
+msgstr "Wyłącz przepływ"
+
+#: MainFrame.py:211
+msgid "Flow is turned OFF"
+msgstr "Przepływ wyłączony"
+
+#: MainFrame.py:212
+msgid "Turn flow ON"
+msgstr "Włącz przepływ"
+
+#: MainFrame.py:223
+msgid "Flow: {}"
+msgstr "Przepływ: {}"
+
+#: MainFrame.py:282
+msgid "Counting down aborted."
+msgstr "Zatrzymano odliczanie."
+
+#: MainFrame.py:283 MainFrame.py:310
+msgid "Start"
+msgstr "Start"
+
+#: MainFrame.py:297
+msgid "Stop"
+msgstr "Stop"
+
+#: MainFrame.py:298 MainFrame.py:306
+msgid "Flow will stop in {} s"
+msgstr "Zatrzymanie przepływu za {} s"
+
+#: MainFrame.py:311
+msgid "Flow is stopped."
+msgstr "Zatrzymano przepływ."
+
+#: Pump.py:29
+msgid "Connection failed"
+msgstr "Błąd połączenia"
+
+#: Pump.py:70
+msgid "No device connected!"
+msgstr "Nie wykryto żadnych urządzeń!"
+
+#: Pump.py:103
+msgid "Connection error!"
+msgstr "Błąd połączenia!"
+
+#: Pump.py:173
+msgid "Flow limits: {} - {}"
+msgstr "Granice przepływu: {} - {}"
+
+#: pykpc.py:32
+msgid "Pump"
+msgstr "Pompa"

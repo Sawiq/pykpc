@@ -20,7 +20,9 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx, threading, serial, Events, Queue
+import wx, threading, serial, Events, Queue, gettext
+
+gettext.install('pykpc', './locale', unicode=True)
 
 class PumpThread(threading.Thread):
     

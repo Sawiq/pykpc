@@ -9,7 +9,7 @@ equipment.
 For now program is not internationalised and written in polish, howewer, I will
 work on it.
 
-## Prerequisits
+## Prerequisites
 * Python >= 2.7
 * Arduino IDE + Arduino Uno/Nano or compatible
 * wxPython

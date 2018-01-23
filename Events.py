@@ -20,7 +20,9 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx
+import wx, gettext
+
+gettext.install('pykpc', './locale', unicode=True)
 
 SERIALRX = wx.NewEventType()
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 1)
@@ -123,11 +125,11 @@ class ErrorMsgEvent(wx.PyCommandEvent):
         return "Błąd: {}".format(self.data)
 
 """
-Jeżeli status:
-0 - Nic nie jest podłączone
-1 - Podłączona jest pompa
-2 - Podłączony jest wstrzykiwacz
-3 - Oba elementy są podłączone
+Status codes:
+0 - Nothing is connected
+1 - Pump connected
+2 - Injector connected
+3 - Both pump and injector connected
 """
 PUMP_CONNECTED = wx.NewEventType()
 EVT_PUMP_CONNECTED = wx.PyEventBinder(PUMP_CONNECTED, 2)

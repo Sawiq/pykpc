@@ -20,14 +20,16 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx, wx.lib.wxpTag
+import wx, wx.lib.wxpTag, gettext
+
+gettext.install('pykpc', './locale', unicode=True)
 
 class HelpFrame(wx.Frame):
-    """This window displays manual."""
+    """This window displays user manual."""
     
     def __init__ (self, parent):
         """ Function doc """
-        wx.Frame.__init__(self, parent, title="Instrukcja obsługi", size=(500, 400))
+        wx.Frame.__init__(self, parent, title=_("User manual"), size=(500, 400))
 
         htmlwin = wx.html.HtmlWindow(self)
         #~ htmlwin.LoadPage("help.html")

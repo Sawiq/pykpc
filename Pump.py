@@ -20,11 +20,13 @@
 #  MA 02110-1301, USA.
 #  
 
-import wx, serial.tools.list_ports, Events, Threads, Queue
+import wx, serial.tools.list_ports, Events, Threads, Queue, gettext
+
+gettext.install('pykpc', './locale', unicode=True)
 
 class Pump(wx.EvtHandler):
     PORT_BAUD_RATE = 9600
-    E_CONNECTION = "Nie można nawiązać połączenia."
+    E_CONNECTION = _("Connection failed")
     MIN_FLOW = 100
     MAX_FLOW = 5000
 
@@ -65,7 +67,7 @@ class Pump(wx.EvtHandler):
     def ConnectPump(self, event):
         self.DisconnectPump()
         if not self.GetAvailableComPorts():
-            event = Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), 0, "Nie podłączono żadnych urządzeń!")
+            event = Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), 0, _("No device connected!"))
             wx.PostEvent(self.parent, event)
             return
             
@@ -98,13 +100,13 @@ class Pump(wx.EvtHandler):
                 code += 2
                 
         if code == 0:
-            msg = "Błąd połączenia!"
+            msg = _("Connection error!")
         if code == 1:
-            msg = "Podłączono pompę, brak wstrzykiwacza."
+            msg = "Pump connected, no injector."
         if code == 2:
-            msg = "Podłączono wstrzykiwacz, brak pompy."
+            msg = "Injector connected, no pump."
         if code == 3:
-            msg = "Podłączono pompę i wstrzykiwacz."
+            msg = "Pump and injector connected."
             
         event = Events.PumpConnectedEvent(Events.PUMP_CONNECTED, self.GetId(), code, msg)
         wx.PostEvent(self.parent, event)
@@ -113,13 +115,13 @@ class Pump(wx.EvtHandler):
         
     def DisconnectPump(self):
         if hasattr(self, 'pumpThread'):
-            print("[INFO]\tOdłączam pompę...")
+            print("[INFO]\tDisconnecting pump...")
             self.pumpThread.Stop()
-            print("[INFO]\tPompa odłączona.")
+            print("[INFO]\tPump disconnected.")
         if hasattr(self, 'injThread'):
-            print("[INFO]\tOdłączam wstrzykiwacz...")
+            print("[INFO]\tDisconnecting injector...")
             self.injThread.Stop()
-            print("[INFO]\tWstrzykiwacz odłączony.")
+            print("[INFO]\tInjector disconnected.")
         return
     
     def ParsePumpResponse(self, event):
@@ -168,7 +170,7 @@ class Pump(wx.EvtHandler):
             return
         
         if flowInt > self.MAX_FLOW or flowInt < self.MIN_FLOW:
-            msg = "Dopuszczalny przepływ: {} - {}".format(self.MIN_FLOW, self.MAX_FLOW)
+            msg = _("Flow limits: {} - {}").format(self.MIN_FLOW, self.MAX_FLOW)
             event = Events.ErrorMsgEvent(Events.ERROR_MSG, self.parent.GetId(), msg)
             wx.PostEvent(self.parent, event)
             return
