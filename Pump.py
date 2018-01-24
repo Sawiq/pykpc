@@ -22,7 +22,7 @@
 
 import wx, serial.tools.list_ports, Events, Threads, Queue, gettext
 
-gettext.install('pykpc', './locale', unicode=True)
+_ = wx.GetTranslation
 
 class Pump(wx.EvtHandler):
     PORT_BAUD_RATE = 9600

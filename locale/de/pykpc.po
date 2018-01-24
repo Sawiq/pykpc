@@ -1,0 +1,150 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2018-01-24 12:36+0100\n"
+"PO-Revision-Date: 2018-01-24 13:02+0100\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: de_DE\n"
+
+#: HelpFrame.py:32
+msgid "User manual"
+msgstr "Bedienungsanleitung"
+
+#: MainFrame.py:58
+msgid "Detecting pump..."
+msgstr "Pumpeerkenung..."
+
+#: MainFrame.py:67
+msgid "&Connect with the pump\tCtrl+P"
+msgstr "&Herstell Verbindung mit den Pumpe\tCtrl+P"
+
+#: MainFrame.py:77
+msgid "&User manual"
+msgstr "&Bedienungsanleitung"
+
+#: MainFrame.py:79
+msgid "&File"
+msgstr "&Datei"
+
+#: MainFrame.py:81
+msgid "&Help"
+msgstr "&Hilfe"
+
+#: MainFrame.py:94
+msgid "Flow"
+msgstr "Fluss"
+
+#: MainFrame.py:96
+msgid "&Set"
+msgstr "&Einstellen"
+
+#: MainFrame.py:98
+msgid "Timer"
+msgstr "Schaltuhr"
+
+#: MainFrame.py:103
+msgid "&Manual measurement."
+msgstr "&Manuelle Messung."
+
+#: MainFrame.py:104
+msgid "Start accusition when &counting down ends."
+msgstr ""
+
+#: MainFrame.py:105
+msgid "Start accusition after sample &injection"
+msgstr ""
+
+#: MainFrame.py:106
+msgid "Start c&ounting down after sample injection"
+msgstr ""
+
+#: MainFrame.py:107
+msgid "Start &flow during sample load."
+msgstr "Start der fluss, wenn die Probe eingeladen werde."
+
+#: MainFrame.py:108
+msgid "&Turn flow ON"
+msgstr "&Fluss einshalten"
+
+#: MainFrame.py:168
+msgid ""
+"Program for controlling Knauer Azura P2.1S pump over serial port.\n"
+"\n"
+"Author: Sawik\n"
+"psawicki@mitr.p.lodz.pl"
+msgstr ""
+
+#: MainFrame.py:169
+msgid "About"
+msgstr "Über das Programm"
+
+#: MainFrame.py:205
+msgid "Flow is turned ON"
+msgstr "Fluss ist eingeshaltet"
+
+#: MainFrame.py:206
+msgid "Turn flow OFF"
+msgstr "Fluss abshalten"
+
+#: MainFrame.py:211
+msgid "Flow is turned OFF"
+msgstr "Fluss ist abgeshaltet"
+
+#: MainFrame.py:212
+msgid "Turn flow ON"
+msgstr "&Fluss einshalten"
+
+#: MainFrame.py:223
+msgid "Flow: {}"
+msgstr "Fluss: {}"
+
+#: MainFrame.py:282
+msgid "Counting down aborted."
+msgstr "Countdown abgebrochen."
+
+#: MainFrame.py:283 MainFrame.py:310
+msgid "Start"
+msgstr "Start"
+
+#: MainFrame.py:297
+msgid "Stop"
+msgstr "Stop"
+
+#: MainFrame.py:298 MainFrame.py:306
+msgid "Flow will stop in {} s"
+msgstr "Fluss will in {} s stoppen"
+
+#: MainFrame.py:311
+msgid "Flow is stopped."
+msgstr "Fluss wurde gestopped."
+
+#: Pump.py:29
+msgid "Connection failed"
+msgstr "Verbindung fehlgeschlagen"
+
+#: Pump.py:70
+msgid "No device connected!"
+msgstr "Kein Gerät verbunden!"
+
+#: Pump.py:103
+msgid "Connection error!"
+msgstr "Verbindungsfehler!"
+
+#: Pump.py:173
+msgid "Flow limits: {} - {}"
+msgstr "Flusslimit: {} - {}"
+
+#: pykpc.py:32
+msgid "Pump"
+msgstr "Pumpe"

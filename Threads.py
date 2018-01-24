@@ -22,7 +22,7 @@
 
 import wx, threading, serial, Events, Queue, gettext
 
-gettext.install('pykpc', './locale', unicode=True)
+_ = wx.GetTranslation
 
 class PumpThread(threading.Thread):
     

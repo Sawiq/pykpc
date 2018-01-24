@@ -24,7 +24,7 @@ import wx, Pump, Events, gettext
 from pymouse import PyMouse
 from HelpFrame import HelpFrame
 
-gettext.install('pykpc', './locale', unicode=True)
+_ = wx.GetTranslation
 
 class MainFrame(wx.Frame):
     

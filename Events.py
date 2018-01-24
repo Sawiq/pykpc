@@ -22,7 +22,7 @@
 
 import wx, gettext
 
-gettext.install('pykpc', './locale', unicode=True)
+_ = wx.GetTranslation
 
 SERIALRX = wx.NewEventType()
 EVT_SERIALRX = wx.PyEventBinder(SERIALRX, 1)
